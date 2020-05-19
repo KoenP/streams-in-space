@@ -4,7 +4,7 @@ import Prelude hiding (iterate, zipWith, scanl)
 import Data.List (intersperse)
 import Control.Applicative
 import System.IO.Unsafe (unsafeInterleaveIO)
-import Debug.Trace
+import Vec
 
 data Stream a = (:.) { hd :: a, tl :: Stream a }
 infixr :.
@@ -19,8 +19,8 @@ peek :: Integer -> Stream a -> [a]
 peek 0 _         = []
 peek n (a :. as) = a : peek (n-1) as
 
-traceStream :: (a -> String) -> Stream a -> Stream a
-traceStream show (a :. as) = trace (show a) a :. traceStream show as
+-- traceStream :: (a -> String) -> Stream a -> Stream a
+-- traceStream show (a :. as) = trace (show a) a :. traceStream show as
 
 -- Let's use a bogus Show instance to save me some typing.
 instance Show a => Show (Stream a) where
@@ -33,6 +33,20 @@ instance Functor Stream where
 instance Applicative Stream where
   pure a                  = a :. pure a
   (f :. fs) <*> (a :. as) = f a :. (fs <*> as)
+
+instance Num a => Num (Stream a) where
+  (+)         = liftA2 (+)
+  (-)         = liftA2 (-)
+  (*)         = liftA2 (*)
+  negate      = fmap negate
+  abs         = fmap abs
+  signum      = fmap signum
+  fromInteger = pure . fromInteger
+
+instance Fractional a => Fractional (Stream a) where
+  (/)          = liftA2 (/)
+  recip        = fmap recip
+  fromRational = pure . fromRational
 
 iterate :: (a -> a) -> a -> Stream a
 iterate f a = a :. iterate f (f a)

@@ -8,7 +8,8 @@ import Graphics.Gloss
 import Graphics.Gloss.Interface.IO.Game
 
 import Stream
-import Game
+-- import Game
+import Game2
 --------------------------------------------------------------------------------
 
 main :: IO ()

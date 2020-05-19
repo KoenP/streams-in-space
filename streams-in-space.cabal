@@ -20,8 +20,10 @@ executable streams-in-space
   default-extensions:  MultiParamTypeClasses,
                        FlexibleInstances,
                        FunctionalDependencies,
-                       LambdaCase
+                       LambdaCase,
+                       UndecidableInstances
   build-depends:       base >= 4.7 && < 5,
                        gloss,
                        containers,
-                       linear
+                       linear,
+                       QuickCheck
