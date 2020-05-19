@@ -21,7 +21,7 @@ executable streams-in-space
                        FlexibleInstances,
                        FunctionalDependencies,
                        LambdaCase,
-                       UndecidableInstances
+                       FlexibleContexts
   build-depends:       base >= 4.7 && < 5,
                        gloss,
                        containers,

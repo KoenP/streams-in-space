@@ -21,15 +21,12 @@ fps = 60
 dt :: Fractional a => a
 dt = 0.1 / fps
 
-integral :: VectorSpace v a => v -> Stream v -> Stream v
-integral v0 v = transfer (^+^) v0 (fmap (dt*^) v)
-
-keyPressed :: Key -> Stream (Set Key) -> Stream Bool
-keyPressed key = fmap (S.member key)
-
 --------------------------------------------------------------------------------
 -- PHYSICS
 --------------------------------------------------------------------------------
+
+integral :: VectorSpace v a => v -> Stream v -> Stream v
+integral v0 v = transfer (^+^) v0 (dt *~ v)
 
 type Pos          = Vec
 type Force        = Vec
@@ -37,7 +34,7 @@ type Acceleration = Vec
 type Velocity     = Vec
 type Mass         = Float
 type Length       = Float
-type Angle      = Float
+type Angle        = Float
 
 -- A Body has a position and a mass.
 data Body = Body { bodyPos :: Pos, bodyMass :: Mass }
@@ -172,7 +169,7 @@ simulateBody :: Body -> Velocity -> Stream Force -> Stream Pos
 simulateBody (Body pos0 mass) vel0 netForce = integral pos0 velocity
   where
     velocity     = integral vel0 acceleration
-    acceleration = (^/ mass) <$> netForce
+    acceleration = netForce ~/ mass
 
 type Field a = Pos -> a
 gravitationalField :: Stream (Field Acceleration) -- force on unit mass
@@ -204,7 +201,7 @@ ship keys = liftA3 ShipState position theta thrusterOn
   where
     position        = integral initPos velocity
     velocity        = integral zeroV netAcceleration
-    netAcceleration = thrust + fmap (0.1 *^) gravity
+    netAcceleration = thrust + (0.1 *~ gravity)
     gravity         = gravitationalField <*> (initPos :. position)
     theta           = integral 0 dTheta
       -- Current direction the ship is looking at.

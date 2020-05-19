@@ -5,6 +5,7 @@ import Data.List (intersperse)
 import Control.Applicative
 import System.IO.Unsafe (unsafeInterleaveIO)
 import Vec
+import Linear.Epsilon
 
 data Stream a = (:.) { hd :: a, tl :: Stream a }
 infixr :.
@@ -47,6 +48,15 @@ instance Fractional a => Fractional (Stream a) where
   (/)          = liftA2 (/)
   recip        = fmap recip
   fromRational = pure . fromRational
+
+(*~) :: VectorSpace v a => a -> Stream v -> Stream v
+a *~ s = fmap (a *^) s
+
+(~*) :: VectorSpace v a => Stream v -> a -> Stream v
+(~*) = flip (*~)
+
+(~/) :: VectorSpace v a => Stream v -> a -> Stream v
+v ~/ a = fmap (^/ a) v
 
 iterate :: (a -> a) -> a -> Stream a
 iterate f a = a :. iterate f (f a)
