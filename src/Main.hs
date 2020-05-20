@@ -8,20 +8,13 @@ import Graphics.Gloss
 import Graphics.Gloss.Interface.IO.Game
 
 import Stream
--- import Game
-import Game2
+import Game
 --------------------------------------------------------------------------------
+
+-- In this module we handle the interaction b
 
 main :: IO ()
 main = run game
-
--- seeyou :: Stream (Set Key) -> Stream Picture
--- seeyou = fmap render . transfer update 0 . keyPressed (Char 'w')
---   where
---     update pos True  = pos + 10
---     update pos False = pos
--- 
---     render pos = translate (-100) pos . scale 0.2 0.2 . color white $ text "See you Wednesday!"
 
 run :: (Stream (Set Key) -> Stream Picture) -> IO ()
 run sf = do

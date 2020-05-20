@@ -8,7 +8,6 @@ import qualified Linear -- TODO remove this dependency, it's overkill and needs 
 import qualified Linear.Affine
 import qualified Linear.Metric
 import Control.Applicative
-import Test.QuickCheck
 --------------------------------------------------------------------------------
 
 class (Eq a, Floating a) => VectorSpace v a | v -> a where
@@ -48,8 +47,6 @@ instance VectorSpace Double Double where
   normalize _ = fromInteger 1
 
 type Vec = V2 Float
-instance Arbitrary Vec where
-  arbitrary = liftA2 V2 arbitrary arbitrary
 
 downVec :: Vec
 downVec = V2 0 (-1)
